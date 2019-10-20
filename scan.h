@@ -1,5 +1,4 @@
-#ifndef SCAN_H_
-#define SCAN_H_
+#pragma once
 
 #define T_EOF       0
 #define T_INT       1
@@ -20,5 +19,3 @@ typedef struct scanner_t {
 
 int scanner_next(scanner_t *s, token_t *t);
 char *tok_type(int type);
-
-#endif
