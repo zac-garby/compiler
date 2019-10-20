@@ -47,6 +47,25 @@ int scanner_next(scanner_t *s, token_t *t) {
     return 1;
 }
 
+char *tok_type(int type) {
+    switch (type) {
+    case T_EOF:
+        return "EOF";
+    case T_INT:
+        return "INT";
+    case T_PLUS:
+        return "PLUS";
+    case T_MINUS:
+        return "MINUS";
+    case T_LPAREN:
+        return "LPAREN";
+    case T_RPAREN:
+        return "RPAREN";
+    default:
+        return "UNDEFINED";
+    }
+}
+
 static int scanner_is_eof(scanner_t *s) {
     return *s->cursor == '\0';
 }

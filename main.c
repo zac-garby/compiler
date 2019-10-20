@@ -53,7 +53,7 @@ void process_line(char *line) {
     s.cursor = &(line[0]);
     
     for (scanner_next(&s, &t); t.type != T_EOF; scanner_next(&s, &t)) {
-        printf("(%d) %s\n", t.type, t.lexeme);
+        printf("%-8s %s\n", tok_type(t.type), t.lexeme);
         
         /* clear string to null characters */
         for (i = 0; t.lexeme[i] != '\0'; i++) {

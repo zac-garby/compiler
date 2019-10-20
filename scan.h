@@ -18,5 +18,6 @@ typedef struct scanner_t {
 } scanner_t;
 
 int scanner_next(scanner_t *s, token_t *t);
+char *tok_type(int type);
 
 #endif
