@@ -42,7 +42,7 @@ int scanner_next(scanner_t *s, token_t *t) {
 	} else {
         return 0;
     }
-        
+	
     return 1;
 }
 
