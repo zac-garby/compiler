@@ -33,7 +33,13 @@ int scanner_next(scanner_t *s, token_t *t) {
     } else if (ch == ')') {
         t->type = T_RPAREN;
 		scanner_advance(s);
-    } else if (scan_while(s, t->lexeme, is_digit)) {
+    } else if (ch == '=') {
+		t->type = T_ASSIGN;
+		scanner_advance(s);
+	} else if (ch == ';') {
+		t->type = T_SEMI;
+		scanner_advance(s);
+	} else if (scan_while(s, t->lexeme, is_digit)) {
         t->type = T_INT;
     } else if (is_letter(ch)) {
 		t->type = T_IDENT;
@@ -75,6 +81,10 @@ char *tok_type(int type) {
 		return "RPAREN";
 	case T_IDENT:
 		return "IDENT";
+	case T_ASSIGN:
+		return "ASSIGN";
+	case T_SEMI:
+		return "SEMI";
     default:
         return "UNDEFINED";
     }

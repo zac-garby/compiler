@@ -7,6 +7,8 @@
 #define T_LPAREN    4
 #define T_RPAREN    5
 #define T_IDENT     6
+#define T_ASSIGN    7
+#define T_SEMI      8
 
 typedef struct token_t {
     int type;
