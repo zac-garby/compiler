@@ -65,7 +65,7 @@ static int scan_while(scanner_t *s, char *lexeme, int(*f)(char s)) {
     return found;
 }
 
-char *tok_type(int type) {
+char *tok_type(toktype_t type) {
     switch (type) {
     case T_EOF:
         return "EOF";

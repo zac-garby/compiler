@@ -1,17 +1,19 @@
 #pragma once
 
-#define T_EOF       0
-#define T_INT       1
-#define T_PLUS      2
-#define T_MINUS     3
-#define T_LPAREN    4
-#define T_RPAREN    5
-#define T_IDENT     6
-#define T_ASSIGN    7
-#define T_SEMI      8
+typedef enum toktype_t_ {
+    T_EOF,
+    T_INT,
+    T_PLUS,
+    T_MINUS,
+    T_LPAREN,
+    T_RPAREN,
+    T_IDENT,
+    T_ASSIGN,
+    T_SEMI
+} toktype_t;
 
 typedef struct token_t {
-    int type;
+    toktype_t type;
     char *lexeme;
 } token_t;
 
@@ -20,4 +22,4 @@ typedef struct scanner_t {
 } scanner_t;
 
 int scanner_next(scanner_t *s, token_t *t);
-char *tok_type(int type);
+char *tok_type(toktype_t type);
