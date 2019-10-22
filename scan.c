@@ -20,35 +20,35 @@ int scanner_next(scanner_t *s, token_t *t) {
     
     if (ch == '\0') {
         t->type = T_EOF;
-		scanner_advance(s);
+        scanner_advance(s);
     } else if (ch == '+') {
         t->type = T_PLUS;
-		scanner_advance(s);
+        scanner_advance(s);
     } else if (ch == '-') {
         t->type = T_MINUS;
-		scanner_advance(s);
+        scanner_advance(s);
     } else if (ch == '(') {
         t->type = T_LPAREN;
-		scanner_advance(s);
+        scanner_advance(s);
     } else if (ch == ')') {
         t->type = T_RPAREN;
-		scanner_advance(s);
+        scanner_advance(s);
     } else if (ch == '=') {
-		t->type = T_ASSIGN;
-		scanner_advance(s);
-	} else if (ch == ';') {
-		t->type = T_SEMI;
-		scanner_advance(s);
-	} else if (scan_while(s, t->lexeme, is_digit)) {
+        t->type = T_ASSIGN;
+        scanner_advance(s);
+    } else if (ch == ';') {
+        t->type = T_SEMI;
+        scanner_advance(s);
+    } else if (scan_while(s, t->lexeme, is_digit)) {
         t->type = T_INT;
     } else if (is_letter(ch)) {
-		t->type = T_IDENT;
-		scanner_advance(s);
-		scan_while(s, t->lexeme + 1, is_letter_or_digit);
-	} else {
+        t->type = T_IDENT;
+        scanner_advance(s);
+        scan_while(s, t->lexeme + 1, is_letter_or_digit);
+    } else {
         return 0;
     }
-	
+    
     return 1;
 }
 
@@ -74,17 +74,17 @@ char *tok_type(int type) {
     case T_PLUS:
         return "PLUS";
     case T_MINUS:
-		return "MINUS";
+        return "MINUS";
     case T_LPAREN:
         return "LPAREN";
     case T_RPAREN:
-		return "RPAREN";
-	case T_IDENT:
-		return "IDENT";
-	case T_ASSIGN:
-		return "ASSIGN";
-	case T_SEMI:
-		return "SEMI";
+        return "RPAREN";
+    case T_IDENT:
+        return "IDENT";
+    case T_ASSIGN:
+        return "ASSIGN";
+    case T_SEMI:
+        return "SEMI";
     default:
         return "UNDEFINED";
     }
@@ -113,11 +113,11 @@ static int is_digit(char ch) {
 }
 
 static int is_letter(char ch) {
-	return ('a' <= ch && ch <= 'z')
-		|| ('A' <= ch && ch <= 'Z')
-		|| (ch == '_');
+    return ('a' <= ch && ch <= 'z')
+        || ('A' <= ch && ch <= 'Z')
+        || (ch == '_');
 }
 
 static int is_letter_or_digit(char ch) {
-	return is_digit(ch) || is_letter(ch);
+    return is_digit(ch) || is_letter(ch);
 }
