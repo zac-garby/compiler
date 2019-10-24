@@ -27,6 +27,12 @@ int scanner_next(scanner_t *s, token_t *t) {
     } else if (ch == '-') {
         t->type = T_MINUS;
         scanner_advance(s);
+    } else if (ch == '*') {
+        t->type = T_TIMES;
+        scanner_advance(s);
+    } else if (ch == '/') {
+        t->type = T_DIVIDE;
+        scanner_advance(s);
     } else if (ch == '(') {
         t->type = T_LPAREN;
         scanner_advance(s);
@@ -75,6 +81,10 @@ char *tok_type(toktype_t type) {
         return "PLUS";
     case T_MINUS:
         return "MINUS";
+    case T_TIMES:
+        return "TIMES";
+    case T_DIVIDE:
+        return "DIVIDE";
     case T_LPAREN:
         return "LPAREN";
     case T_RPAREN:

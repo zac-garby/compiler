@@ -5,6 +5,8 @@ typedef enum toktype_t_ {
     T_INT,
     T_PLUS,
     T_MINUS,
+    T_TIMES,
+    T_DIVIDE,
     T_LPAREN,
     T_RPAREN,
     T_IDENT,
