@@ -46,3 +46,6 @@ typedef struct stmt_t_ {
         expr_t *expr;
     };
 } stmt_t;
+
+void print_expr(int indent, expr_t *e);
+void print_stmt(int indent, stmt_t *s);
