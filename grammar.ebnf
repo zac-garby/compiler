@@ -1,0 +1,9 @@
+integer ::= INT;
+id ::= IDENT;
+
+term ::= factor ((PLUS | MINUS) factor)*;
+factor ::= atom ((TIMES | DIVIDE) atom)*;
+atom ::= LPAREN expr RPAREN | integer | id;
+
+expr ::= term;
+
