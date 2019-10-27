@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "parser.h"
 #include "scan.h"
@@ -212,4 +213,63 @@ int parse_atom(parser_t *p, expr_t *e) {
     }
 
     return 0;
+}
+
+int parse_stmt(parser_t *p, stmt_t *s) {
+    s->type = ST_EXPR;
+    s->expr = malloc(sizeof(expr_t));
+    
+    if (!parse_expr(p, s->expr)) {
+        p->err.message = NULL;
+        // set_error(p, "expected a statement");
+        return 0;
+    }
+
+    if (p->cur.type != T_SEMI) {
+        set_error(p, "semicolon missing after statement");
+        return 0;
+    }
+
+    parser_advance(p);
+
+    return 1;
+}
+
+int parse_compound(parser_t *p, stmt_t *s) {
+    int i, ok, capacity;
+    stmt_t stmt, *new_arr;
+    
+    s->type = ST_COMPOUND;
+    s->compound = malloc(sizeof(stmt_compound_t));
+
+    capacity = 4;
+    s->compound->amount = 0;
+    s->compound->statements = malloc(sizeof(stmt_t) * 4);
+    
+    for (i = 0; ; i++) {
+        if (i >= capacity) {
+            capacity += 16;
+            new_arr = realloc(s->compound->statements, capacity);
+            
+            if (new_arr == NULL) {
+                free(s->compound->statements);
+                printf("ran out of memory to allocate array storage\n");
+                exit(1);
+            } else {
+                s->compound->statements = new_arr;
+            }
+        }
+
+        if (parse_stmt(p, &s->compound->statements[i])) {
+            s->compound->amount++;
+        } else {
+            if (p->err.message == NULL) {
+                break;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    return 1;
 }

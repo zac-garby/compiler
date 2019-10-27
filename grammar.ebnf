@@ -1,6 +1,7 @@
 integer ::= INT;
 id ::= IDENT;
 
+;; expressions
 assignment ::= term (ASSIGN term)?;
 term ::= factor ((PLUS | MINUS) factor)*;
 factor ::= atom ((TIMES | DIVIDE) atom)*;
@@ -8,3 +9,6 @@ atom ::= LPAREN expr RPAREN | integer | id | (PLUS | MINUS) expr;
 
 expr ::= assignment;
 
+;; statements
+compound ::= statement*;
+statement ::= expr SEMI;

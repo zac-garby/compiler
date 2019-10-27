@@ -24,3 +24,5 @@ int parse_assignment(parser_t *p, expr_t *e);
 int parse_term(parser_t *p, expr_t *e);
 int parse_factor(parser_t *p, expr_t *e);
 int parse_atom(parser_t *p, expr_t *e);
+
+int parse_compound(parser_t *p, stmt_t *s);
