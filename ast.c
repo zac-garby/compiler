@@ -33,7 +33,7 @@ void print_stmt(int indent, stmt_t *s) {
 
     switch (s->type) {
     case ST_COMPOUND:
-        printf("COMPOUND:\n");
+        printf("COMPOUND (%d):\n", s->compound->amount);
         for (j = 0; j < s->compound->amount; j++) {
             print_stmt(indent+1, &s->compound->statements[j]);
         }
