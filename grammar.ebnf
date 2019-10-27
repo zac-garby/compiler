@@ -1,7 +1,7 @@
 integer ::= INT;
 id ::= IDENT;
 
-assignment ::= term (ASSIGN term);
+assignment ::= term (ASSIGN term)?;
 term ::= factor ((PLUS | MINUS) factor)*;
 factor ::= atom ((TIMES | DIVIDE) atom)*;
 atom ::= LPAREN expr RPAREN | integer | id;
