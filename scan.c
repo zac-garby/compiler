@@ -67,6 +67,10 @@ static int scan_while(scanner_t *s, char *lexeme, int(*f)(char s)) {
         lexeme[i++] = *s->cursor;
         scanner_advance(s);
     }
+
+    if (found) {
+        lexeme[i] = '\0';
+    }
     
     return found;
 }
