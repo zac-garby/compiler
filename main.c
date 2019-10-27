@@ -49,15 +49,15 @@ int main(int argc, char **argv) {
 void process_line(char *line) {
     scanner_t s;
     parser_t p;
-    expr_t e;
+    stmt_t st;
     
     s.cursor = &(line[0]);
     p.s = &s;
     p.cur.lexeme = malloc(128 * sizeof(char));
     parser_advance(&p);
 
-    if (parse_expr(&p, &e)) {
-        print_expr(0, &e);
+    if (parse_compound(&p, &st)) {
+        print_stmt(0, &st);
     } else {
         printf("%s\n", p.err.message);
     }
