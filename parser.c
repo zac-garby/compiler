@@ -23,7 +23,7 @@ int parser_advance(parser_t *p) {
 }
 
 int parse_expr(parser_t *p, expr_t *e) {
-    return parse_term(p, e);
+    return parse_assignment(p, e);
 }
 
 int parse_integer(parser_t *p, expr_t *e) {
@@ -57,6 +57,41 @@ int parse_ident(parser_t *p, expr_t *e) {
     e->ident = ident;
 
     parser_advance(p);
+
+    return 1;
+}
+
+int parse_assignment(parser_t *p, expr_t *e) {
+    if (!parse_term(p, e)) {
+        set_error(p, "expected an expression");
+        return 0;
+    }
+
+    if (p->cur.type == T_ASSIGN) {
+        expr_t *infix;
+        expr_infix_t *inf;
+        
+        parser_advance(p);
+
+        infix = malloc(sizeof(expr_t));
+        inf = malloc(sizeof(expr_infix_t));
+
+        infix->type = EX_INFIX;
+        infix->infix = inf;
+
+        inf->op = T_ASSIGN;
+        inf->left = malloc(sizeof(expr_t));
+        inf->right = malloc(sizeof(expr_t));
+
+        memcpy(inf->left, e, sizeof(expr_t));
+
+        if (!parse_term(p, inf->right)) {
+            set_error(p, "expected an expression following an assignment operator");
+            return 0;
+        }
+
+        memcpy(e, infix, sizeof(expr_t));
+    }
 
     return 1;
 }
