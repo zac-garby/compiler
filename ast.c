@@ -19,6 +19,10 @@ void print_expr(int indent, expr_t *e) {
         print_expr(indent+1, e->infix->left);
         print_expr(indent+1, e->infix->right);
         break;
+    case EX_PREFIX:
+        printf("PREFIX: %s\n", tok_type(e->prefix->op));
+        print_expr(indent+1, e->prefix->e);
+        break;
     }
 }
 

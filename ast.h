@@ -5,7 +5,8 @@
 typedef enum exprtype_t_ {
     EX_INT,
     EX_IDENT,
-    EX_INFIX
+    EX_INFIX,
+    EX_PREFIX,
 } exprtype_t;
 
 typedef enum stmttype_t_ {
@@ -23,12 +24,18 @@ typedef struct expr_infix_t_ {
     toktype_t op;
 } expr_infix_t;
 
+typedef struct expr_prefix_t_ {
+    expr_t *e;
+    toktype_t op;
+} expr_prefix_t;
+
 typedef struct expr_t_ {
     exprtype_t type;
     union {
         int integer;
         char *ident;
         expr_infix_t *infix;
+        expr_prefix_t *prefix;
     };
 } expr_t;
 

@@ -186,6 +186,23 @@ int parse_atom(parser_t *p, expr_t *e) {
         return 1;
     }
 
+    if (p->cur.type == T_PLUS || p->cur.type == T_MINUS) {
+        expr_prefix_t *pref = malloc(sizeof(expr_prefix_t));
+
+        pref->op = p->cur.type;
+        pref->e = malloc(sizeof(expr_t));
+        
+        parser_advance(p);
+        if (!parse_expr(p, pref->e)) {
+            return 0;
+        }
+
+        e->type = EX_PREFIX;
+        e->prefix = pref;
+
+        return 1;
+    }
+
     if (parse_integer(p, e)) {
         return 1;
     }
