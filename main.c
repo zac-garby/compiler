@@ -2,6 +2,8 @@
 #include <stdlib.h>
 
 #include "scan.h"
+#include "ast.h"
+#include "parser.h"
 
 void process_line(char *line);
 
@@ -45,21 +47,20 @@ int main(int argc, char **argv) {
 }
 
 void process_line(char *line) {
-    token_t t;
     scanner_t s;
-    int i;
+    parser_t p;
+    expr_t e;
     
-    t.lexeme = malloc(128);
     s.cursor = &(line[0]);
-    
-    for (scanner_next(&s, &t); t.type != T_EOF; scanner_next(&s, &t)) {
-        printf("%-8s %s\n", tok_type(t.type), t.lexeme);
-        
-        /* clear string to null characters */
-        for (i = 0; t.lexeme[i] != '\0'; i++) {
-            t.lexeme[i] = '\0';
-        }
+    p.s = &s;
+    p.cur.lexeme = malloc(128 * sizeof(char));
+    parser_advance(&p);
+
+    if (parse_expr(&p, &e)) {
+        print_expr(0, &e);
+    } else {
+        printf("%s\n", p.err.message);
     }
-    
-    free(t.lexeme);
+
+    free(p.cur.lexeme);
 }
