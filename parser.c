@@ -75,14 +75,20 @@ int parse_assignment(parser_t *p, expr_t *e) {
         parser_advance(p);
 
         infix = malloc(sizeof(expr_t));
+        infix->mallocd = 1;
+        
         inf = malloc(sizeof(expr_infix_t));
 
         infix->type = EX_INFIX;
         infix->infix = inf;
 
         inf->op = T_ASSIGN;
+        
         inf->left = malloc(sizeof(expr_t));
+        inf->left->mallocd = 1;
+        
         inf->right = malloc(sizeof(expr_t));
+        inf->right->mallocd = 1;
 
         memcpy(inf->left, e, sizeof(expr_t));
 
@@ -111,14 +117,20 @@ int parse_term(parser_t *p, expr_t *e) {
         parser_advance(p);
 
         infix = malloc(sizeof(expr_t));
+        infix->mallocd = 1;
+        
         inf = malloc(sizeof(expr_infix_t));
 
         infix->type = EX_INFIX;
         infix->infix = inf;
         
         inf->op = op;
+        
         inf->left = malloc(sizeof(expr_t));
+        inf->left->mallocd = 1;
+        
         inf->right = malloc(sizeof(expr_t));
+        inf->right->mallocd = 1;
         
         memcpy(inf->left, e, sizeof(expr_t));
 
@@ -147,14 +159,20 @@ int parse_factor(parser_t *p, expr_t *e) {
         parser_advance(p);
 
         infix = malloc(sizeof(expr_t));
+        infix->mallocd = 1;
+        
         inf = malloc(sizeof(expr_infix_t));
 
         infix->type = EX_INFIX;
         infix->infix = inf;
         
         inf->op = op;
+        
         inf->left = malloc(sizeof(expr_t));
+        inf->left->mallocd = 1;
+        
         inf->right = malloc(sizeof(expr_t));
+        inf->right->mallocd = 1;
         
         memcpy(inf->left, e, sizeof(expr_t));
 
@@ -192,6 +210,7 @@ int parse_atom(parser_t *p, expr_t *e) {
 
         pref->op = p->cur.type;
         pref->e = malloc(sizeof(expr_t));
+        pref->e->mallocd = 1;
         
         parser_advance(p);
         if (!parse_expr(p, pref->e)) {
@@ -217,7 +236,9 @@ int parse_atom(parser_t *p, expr_t *e) {
 
 int parse_stmt(parser_t *p, stmt_t *s) {
     s->type = ST_EXPR;
+    
     s->expr = malloc(sizeof(expr_t));
+    s->expr->mallocd = 1;
     
     if (!parse_expr(p, s->expr)) {
         p->err.message = NULL;
@@ -236,8 +257,8 @@ int parse_stmt(parser_t *p, stmt_t *s) {
 }
 
 int parse_compound(parser_t *p, stmt_t *s) {
-    int i, ok, capacity;
-    stmt_t stmt, *new_arr;
+    int i, capacity;
+    stmt_t *new_arr;
     
     s->type = ST_COMPOUND;
     s->compound = malloc(sizeof(stmt_compound_t));

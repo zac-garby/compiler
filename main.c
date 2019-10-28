@@ -50,7 +50,8 @@ void process_line(char *line) {
     scanner_t s;
     parser_t p;
     stmt_t st;
-    
+
+    st.mallocd = 0;
     s.cursor = &(line[0]);
     p.s = &s;
     p.cur.lexeme = malloc(128 * sizeof(char));
@@ -62,5 +63,6 @@ void process_line(char *line) {
         printf("%s\n", p.err.message);
     }
 
+    free_stmt(&st);
     free(p.cur.lexeme);
 }

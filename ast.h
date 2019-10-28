@@ -31,6 +31,7 @@ typedef struct expr_prefix_t_ {
 
 typedef struct expr_t_ {
     exprtype_t type;
+    int mallocd;
     union {
         int integer;
         char *ident;
@@ -48,6 +49,7 @@ typedef struct stmt_compound_t_ {
 
 typedef struct stmt_t_ {
     stmttype_t type;
+    int mallocd;
     union {
         stmt_compound_t *compound;
         expr_t *expr;
@@ -56,3 +58,6 @@ typedef struct stmt_t_ {
 
 void print_expr(int indent, expr_t *e);
 void print_stmt(int indent, stmt_t *s);
+
+void free_expr(expr_t *e);
+void free_stmt(stmt_t *s);

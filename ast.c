@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "ast.h"
 
@@ -42,5 +43,48 @@ void print_stmt(int indent, stmt_t *s) {
         printf("EXPR:\n");
         print_expr(indent+1, s->expr);
         break;
+    }
+}
+
+void free_expr(expr_t *e) {
+    switch (e->type) {
+    case EX_INT:
+        break;
+    case EX_IDENT:
+        free(e->ident);
+        break;
+    case EX_INFIX:
+        free_expr(e->infix->left);
+        free_expr(e->infix->right);
+        free(e->infix);
+        break;
+    case EX_PREFIX:
+        free_expr(e->prefix->e);
+        free(e->prefix);
+        break;
+    }
+
+    if (e->mallocd) {
+        free(e);
+    }
+}
+
+void free_stmt(stmt_t *s) {
+    int i;
+    
+    switch (s->type) {
+    case ST_COMPOUND:
+        for (i = 0; i < s->compound->amount; i++) {
+            free_stmt(&s->compound->statements[i]);
+        }
+        free(s->compound->statements);
+        break;
+    case ST_EXPR:
+        free_expr(s->expr);
+        break;
+    }
+
+    if (s->mallocd) {
+        free(s);
     }
 }
