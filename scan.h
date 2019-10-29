@@ -11,7 +11,8 @@ typedef enum toktype_t_ {
     T_RPAREN,
     T_IDENT,
     T_ASSIGN,
-    T_SEMI
+    T_SEMI,
+    T_COMMA,
 } toktype_t;
 
 typedef struct token_t {

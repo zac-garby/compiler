@@ -45,6 +45,9 @@ int scanner_next(scanner_t *s, token_t *t) {
     } else if (ch == ';') {
         t->type = T_SEMI;
         scanner_advance(s);
+    } else if (ch == ',') {
+        t->type = T_COMMA;
+        scanner_advance(s);
     } else if (scan_while(s, t->lexeme, is_digit)) {
         t->type = T_INT;
     } else if (is_letter(ch)) {
@@ -99,6 +102,8 @@ char *tok_type(toktype_t type) {
         return "ASSIGN";
     case T_SEMI:
         return "SEMI";
+    case T_COMMA:
+        return "COMMA";
     default:
         return "UNDEFINED";
     }
