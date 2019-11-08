@@ -63,6 +63,8 @@ void print_stmt(int indent, stmt_t *s) {
 }
 
 void free_expr(expr_t *e) {
+    int i;
+    
     switch (e->type) {
     case EX_INT:
         break;
@@ -78,6 +80,14 @@ void free_expr(expr_t *e) {
         free_expr(e->prefix->e);
         free(e->prefix);
         break;
+    case EX_CALL:
+	free_expr(e->call->fn);
+
+	for (i = 0; i < e->call->n_args; i++) {
+	    free_expr(&e->call->args[i]);
+	}
+
+	free(e->call);
     }
 
     if (e->mallocd) {
