@@ -6,30 +6,30 @@ The syntax will probably look something like this:
 
 ```
 fn sum (x *int, length int) -> int {
-  var i, sum int;
+    var i, sum int;
   
-  sum = 0;
+    sum = 0;
   
-  for (i = 0; i < length; i++) {
-    sum += x[i];
-  }
+    for (i = 0; i < length; i++) {
+        sum += x[i];
+    }
   
-  return sum;
+    return sum;
 }
 
 fn main () {
-  var x *int;
+    var x *int;
   
-  x = malloc(5);
+    x = malloc(5);
   
-  x[0] = 2;
-  x[1] = 4;
-  x[2] = 12;
-  x[3] = 5;
-  x[4] = -2;
+    x[0] = 2;
+    x[1] = 4;
+    x[2] = 12;
+    x[3] = 5;
+    x[4] = -2;
   
-  print_i(sum(x, 5) * 2); //-> 42
+    print_i(sum(x, 5) * 2); //-> 42
   
-  free(x);
+    free(x);
 }
 ```
