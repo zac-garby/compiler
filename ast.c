@@ -4,7 +4,7 @@
 #include "ast.h"
 
 void print_expr(int indent, expr_t *e) {
-    int i;
+    int i, j;
     
     for (i = 0; i < indent; i++) printf("| ");
 
@@ -24,6 +24,22 @@ void print_expr(int indent, expr_t *e) {
         printf("PREFIX: %s\n", tok_type(e->prefix->op));
         print_expr(indent+1, e->prefix->e);
         break;
+    case EX_CALL:
+	printf("CALL (%d args)\n", e->call->n_args);
+
+	for (i = 0; i < indent+1; i++) printf("| ");
+	printf("FUNCTION:\n");
+	print_expr(indent+2, e->call->fn);
+
+	for (i = 0; i < indent+1; i++) printf("| ");
+	printf("ARGUMENTS (%d):\n", e->call->n_args);
+	for (i = 0; i < e->call->n_args; i++) {
+	    for (j = 0; j < indent+2; j++) printf("| ");
+	    
+	    printf("ARG #%d\n", i);
+	    print_expr(indent+3, &e->call->args[i]);
+	}
+	break;
     }
 }
 

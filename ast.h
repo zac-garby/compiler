@@ -7,6 +7,7 @@ typedef enum exprtype_t_ {
     EX_IDENT,
     EX_INFIX,
     EX_PREFIX,
+    EX_CALL
 } exprtype_t;
 
 typedef enum stmttype_t_ {
@@ -29,6 +30,11 @@ typedef struct expr_prefix_t_ {
     toktype_t op;
 } expr_prefix_t;
 
+typedef struct expr_call_t_ {
+    expr_t *fn, *args;
+    int n_args;
+} expr_call_t;
+
 typedef struct expr_t_ {
     exprtype_t type;
     int mallocd;
@@ -37,6 +43,7 @@ typedef struct expr_t_ {
         char *ident;
         expr_infix_t *infix;
         expr_prefix_t *prefix;
+	expr_call_t *call;
     };
 } expr_t;
 
