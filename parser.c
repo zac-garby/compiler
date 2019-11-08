@@ -64,7 +64,6 @@ int parse_ident(parser_t *p, expr_t *e) {
 
 int parse_assignment(parser_t *p, expr_t *e) {
     if (!parse_term(p, e)) {
-        set_error(p, "expected an expression");
         return 0;
     }
 
@@ -105,7 +104,6 @@ int parse_assignment(parser_t *p, expr_t *e) {
 
 int parse_term(parser_t *p, expr_t *e) {
     if (!parse_factor(p, e)) {
-        set_error(p, "expected an expression");
         return 0;
     }
 
@@ -146,8 +144,7 @@ int parse_term(parser_t *p, expr_t *e) {
 }
 
 int parse_factor(parser_t *p, expr_t *e) {
-    if (!parse_atom(p, e)) {
-        set_error(p, "expected an expression");
+    if (!parse_call(p, e)) {
         return 0;
     }
 
@@ -176,18 +173,91 @@ int parse_factor(parser_t *p, expr_t *e) {
         
         memcpy(inf->left, e, sizeof(expr_t));
 
-        if (!parse_atom(p, inf->right)) {
+        if (!parse_call(p, inf->right)) {
             set_error(p, "expected an expression following an operator");
             return 0;
         }
-        
+
         memcpy(e, infix, sizeof(expr_t));
     }
 
     return 1;
 }
 
+int parse_call(parser_t *p, expr_t *e) {
+    if (!parse_atom(p, e)) {
+	return 0;
+    }
+
+    if (p->cur.type == T_LPAREN) {
+	expr_call_t *call;
+	expr_t *new_args;
+	int capacity = 2;
+
+	call = malloc(sizeof(expr_call_t));
+	
+	call->fn = malloc(sizeof(expr_t));
+	memcpy(call->fn, e, sizeof(expr_t));
+	call->fn->mallocd = 1;
+	
+	call->args = malloc(capacity * sizeof(expr_t));
+	call->n_args = 0;
+	
+	parser_advance(p);
+
+	while (p->cur.type != T_EOF && p->cur.type != T_RPAREN) {
+	    if (call->n_args >= capacity) {
+		capacity += 4;
+		new_args = realloc(call->args, capacity * sizeof(expr_t));
+
+		if (new_args == NULL) {
+		    printf("could not allocate enough memory to hold the function arguments\n");
+		    exit(1);
+		} else {
+		    call->args = new_args;
+		}
+	    }
+	    
+	    int ok = parse_expr(p, &call->args[call->n_args]);
+	    if (!ok) {
+		return 0;
+	    }
+
+	    call->n_args++;
+
+	    if (p->cur.type == T_COMMA) {
+		parser_advance(p);
+	    } else if (p->cur.type == T_RPAREN) {
+		break;
+	    } else {
+		set_error(p, "missing comma in function arguments");
+		return 0;
+	    }
+	}
+
+	if (p->cur.type == T_RPAREN) {
+	    parser_advance(p);
+	} else {
+	    set_error(p, "missing closing bracket in function arguments");
+	    return 0;
+	}
+	
+	e->type = EX_CALL;
+	e->call = call;
+    }
+
+    return 1;
+}
+
 int parse_atom(parser_t *p, expr_t *e) {
+    if (parse_integer(p, e)) {
+        return 1;
+    }
+
+    if (parse_ident(p, e)) {
+        return 1;
+    }
+    
     if (p->cur.type == T_LPAREN) {
         parser_advance(p);
 
@@ -223,13 +293,7 @@ int parse_atom(parser_t *p, expr_t *e) {
         return 1;
     }
 
-    if (parse_integer(p, e)) {
-        return 1;
-    }
-
-    if (parse_ident(p, e)) {
-        return 1;
-    }
+    set_error(p, "no atomic expression to parse. looking for parenthesised expression, unary operator, integer literal, or identifier.");
 
     return 0;
 }
@@ -240,8 +304,7 @@ int parse_stmt(parser_t *p, stmt_t *s) {
     s->expr = malloc(sizeof(expr_t));
     s->expr->mallocd = 1;
     
-    if (!parse_expr(p, s->expr)) {
-        p->err.message = NULL;
+    if (!parse_expr( p, s->expr)) {
         // set_error(p, "expected a statement");
         return 0;
     }
@@ -281,6 +344,10 @@ int parse_compound(parser_t *p, stmt_t *s) {
             }
         }
 
+	if (p->cur.type == T_EOF) {
+	    return 1;
+	}
+	
         if (parse_stmt(p, &s->compound->statements[i])) {
             s->compound->amount++;
         } else {
